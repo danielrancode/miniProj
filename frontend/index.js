@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderMain = (e) => {
       let noteId = e.target.parentElement.dataset.noteId
       let note = notes.find(note => note.id == noteId)
-      let noteContent = `<h3>${note.title}</h3>
+      let noteContent =
+      `<h3>${note.title}</h3>
       <p>${note.body}</p>
       </div>
       </div>`
@@ -20,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
 
-  const renderSidebar = (notes) => {
+  const renderSidebar = () => {
     let newHTML = notes.map(note => {
       return `<div id="note-${notes.indexOf(note)}-container" class="note-container" data-note-id="${note.id}">
       <div id="note-${notes.indexOf(note)}-preview" class="note-preview" data-note-id="${note.id}">
@@ -40,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(res => res.json())
     .then(data => {
       notes = data[0].notes
-    renderSidebar(notes)
+    renderSidebar()
     generateListeners()
   })
 }
