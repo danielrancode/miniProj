@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   function useData(data) {
-    console.log(data)
+    document.innerHTML = data
 
   }
 
