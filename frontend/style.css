@@ -1,0 +1,20 @@
+#sidebar {
+  background-color: blue;
+  /* position: fixed; */
+  width: 300px
+}
+
+.note-container {
+  border: 1px dotted red;
+
+
+padding: 2px
+
+}
+
+.note-preview {
+  padding-left: 10px;
+
+  border: 1px dotted yellow;
+
+}
