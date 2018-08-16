@@ -6,15 +6,40 @@ document.addEventListener('DOMContentLoaded', () => {
       method: "DELETE"
     }).then(res => res.json())
     .catch(error => console.error('Error...', error))
-    .then(res => console.log('deleted...!', res)).then(() => renderPage())
+    .then(res => console.log(res)).then(() => renderPage())
 
+  }
+
+  const getNote = (id, callback) => {
+    let note
+    return fetch(`http://localhost:3000/api/v1/notes/${id}`)
+    .then(res => res.json())
+    .catch(error => console.error('Error!!!', error))
+    .then(data => {
+    console.log('Success!!!')
+    return callback(data)
+  })
+  }
+
+  const editNoteForm = (noteObj) => {
+    console.log(noteObj.id)
+    console.log(noteObj.title)
+    console.log(noteObj.body)
+    console.log(noteObj.user.name)
+    console.log(noteObj.user.id)
   }
 
     const renderMain = (e = null) => {
       let mainContent = document.getElementById('main-content')
       if (e == null) {
-        console.log(e)
         mainContent.innerHTML = ''
+      } else if (e.target.className == 'edit-note-button') {
+        // console.log(e.target)
+        let noteId = e.target.parentElement.dataset.noteId
+        getNote(noteId, editNoteForm)
+        // console.log(noteGlobal)
+        // editNoteForm(noteObj)
+        // mainContent.innerHTML = editNoteForm(noteId)
       } else {
         let noteId = e.target.parentElement.dataset.noteId
         let note = notes.find(note => note.id == noteId)
@@ -52,13 +77,14 @@ document.addEventListener('DOMContentLoaded', () => {
       <div id="note-${notes.indexOf(note)}-preview" class="note-preview" data-note-id="${note.id}">
       <h3>${note.title}</h3>
       <p>${note.body.substr(0, 50)}...</p>
+      <button class="edit-note-button" type="button">Edit</button>
       </div>
       </div>`
       })
       .join('')
 
     // create new note form
-    let newNoteButton = `<form id="create-note-form" action="http://localhost:3000/api/v1/notes">
+    let createNoteForm = `<form id="create-note-form" action="http://localhost:3000/api/v1/notes">
                           <label for="new-note-title">Title:</label>
                           <input type="text" id="new-note-title" name="new-note-title" placeholder="title">
                           <label for="new-note-body">Body:</label>
@@ -66,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
                           <input id="create-note-submit" type="submit" value="Create New Note">
                         </form>`
     // put in html
-    sidebar.innerHTML = notePreviews + newNoteButton
+    sidebar.innerHTML = notePreviews + createNoteForm
   }
 
   const postNote = (noteObj) => {
@@ -94,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 }
 
-
+let noteGlobal
 let notes
 renderPage()
 
