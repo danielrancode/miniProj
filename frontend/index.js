@@ -21,12 +21,21 @@ document.addEventListener('DOMContentLoaded', () => {
   })
   }
 
-  const editNoteForm = (noteObj) => {
-    console.log(noteObj.id)
-    console.log(noteObj.title)
-    console.log(noteObj.body)
-    console.log(noteObj.user.name)
-    console.log(noteObj.user.id)
+  const renderEditNoteForm = (note) => {
+    console.log(note.id)
+    console.log(note.title)
+    console.log(note.body)
+    console.log(note.user.name)
+    console.log(note.user.id)
+    let mainContent = document.getElementById('main-content')
+    mainContent.innerHTML = `<form id="edit-note-form" action="http://localhost:3000/api/v1/notes/${note.id}">
+                          <label for="edit-note-title">Title:</label>
+                          <input type="text" id="edit-note-title" name="edit-note-title" placeholder="title">
+                          <label for="edit-note-body">Body:</label>
+                          <input type="text" id="edit-note-body" name="edit-note-body" placeholder="body">
+                          <input id="edit-note-submit" type="submit" value="Update Note">
+                        </form>`
+    // put in html
   }
 
     const renderMain = (e = null) => {
@@ -34,12 +43,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e == null) {
         mainContent.innerHTML = ''
       } else if (e.target.className == 'edit-note-button') {
-        // console.log(e.target)
         let noteId = e.target.parentElement.dataset.noteId
-        getNote(noteId, editNoteForm)
-        // console.log(noteGlobal)
-        // editNoteForm(noteObj)
-        // mainContent.innerHTML = editNoteForm(noteId)
+        console.log(noteId)
+        // mainContent.innerHTML =
+        getNote(noteId, renderEditNoteForm)
       } else {
         let noteId = e.target.parentElement.dataset.noteId
         let note = notes.find(note => note.id == noteId)
