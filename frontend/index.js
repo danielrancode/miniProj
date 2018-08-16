@@ -23,19 +23,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const renderEditNoteForm = (note) => {
     console.log(note.id)
-    console.log(note.title)
-    console.log(note.body)
-    console.log(note.user.name)
-    console.log(note.user.id)
+    // console.log(note.title)
+    // console.log(note.body)
+    // console.log(note.user.name)
+    // console.log(note.user.id)
     let mainContent = document.getElementById('main-content')
     mainContent.innerHTML = `<form id="edit-note-form" action="http://localhost:3000/api/v1/notes/${note.id}">
                           <label for="edit-note-title">Title:</label>
-                          <input type="text" id="edit-note-title" name="edit-note-title" placeholder="title">
+                          <input type="text" id="edit-note-title" name="edit-note-title" value="${note.title}">
                           <label for="edit-note-body">Body:</label>
-                          <input type="text" id="edit-note-body" name="edit-note-body" placeholder="body">
+                          <input type="text" id="edit-note-body" name="edit-note-body" value="${note.body}">
                           <input id="edit-note-submit" type="submit" value="Update Note">
                         </form>`
-    // put in html
+
+    let editNoteForm = document.getElementById('edit-note-form')
+    editNoteForm.addEventListener('submit', (e) => {
+        e.preventDefault()
+        const noteTitle = document.getElementById('edit-note-title').value
+        const noteBody = document.getElementById('edit-note-body').value
+        updateNote({id: note.id, title: noteTitle, body: noteBody, user_id:1})
+    })
   }
 
     const renderMain = (e = null) => {
@@ -67,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const generateListeners = () => {
     sidebar.addEventListener('click', renderMain)
-    let createNoteForm= document.getElementById('create-note-form')
+    let createNoteForm = document.getElementById('create-note-form')
     createNoteForm.addEventListener('submit', (e) => {
         e.preventDefault()
         const newNoteTitle = document.getElementById('new-note-title').value
@@ -105,6 +112,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const postNote = (noteObj) => {
     return fetch('http://localhost:3000/api/v1/notes', {
       method: "POST",
+      body: JSON.stringify(noteObj),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(res => res.json())
+    .catch(error => console.error('Error!!!', error))
+    .then(res => console.log('Success!!!', res)).then(() => renderPage())
+
+  }
+  const updateNote = (noteObj) => {
+    return fetch(`http://localhost:3000/api/v1/notes/${noteObj.id}`, {
+      method: "PATCH",
       body: JSON.stringify(noteObj),
       headers: {
         'Content-Type': 'application/json'
