@@ -18,12 +18,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const generateListeners = () => {
     sidebar.addEventListener('click', renderMain)
-    let createNoteSubmit = document.getElementById('create-note-submit')
-    createNoteSubmit.addEventListener('submit', (e) => {
+    let createNoteForm= document.getElementById('create-note-form')
+    createNoteForm.addEventListener('submit', (e) => {
         e.preventDefault()
-        debugger
+        const newNoteTitle = document.getElementById('new-note-title').value
+        const newNoteBody = document.getElementById('new-note-body').value
+        postNote({title: newNoteTitle, body: newNoteBody, user_id:1})
+        // console.log(`title: '${title}', body: '${body}', user_id:1`)
     })
-
   }
 
 
@@ -40,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .join('')
 
     // create new note form
-    let newNoteButton = `<form id="create-note-form" action="index.html" method="post">
+    let newNoteButton = `<form id="create-note-form" action="http://localhost:3000/api/v1/notes">
                           <label for="new-note-title">Title:</label>
                           <input type="text" id="new-note-title" name="new-note-title" placeholder="title">
                           <label for="new-note-body">Body:</label>
@@ -49,6 +51,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         </form>`
     // put in html
     sidebar.innerHTML = notePreviews + newNoteButton
+  }
+
+  const postNote = (noteObj) => {
+    return fetch('http://localhost:3000/api/v1/notes', {
+      method: "POST",
+      body: JSON.stringify(noteObj),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(res => res.json())
+    .catch(error => console.error('Error!!!', error))
+    .then(res => console.log('Success!!!', res)).then(() => renderPage())
+
   }
 
 
