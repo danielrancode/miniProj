@@ -1,15 +1,32 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    const renderMain = (e) => {
-      let noteId = e.target.parentElement.dataset.noteId
-      let note = notes.find(note => note.id == noteId)
-      let noteContent =
-      `<h3>${note.title}</h3>
-      <p>${note.body}</p>
-      </div>
-      </div>`
+  const deleteNote = (e) => {
+    let noteId = e.target.parentElement.dataset.noteId
+    fetch(`http://localhost:3000/api/v1/notes/${noteId}`, {
+      method: "DELETE"
+    }).then(res => res.json())
+    .catch(error => console.error('Error...', error))
+    .then(res => console.log('deleted...!', res)).then(() => renderPage())
 
-      document.getElementById('main-content').innerHTML = noteContent
+  }
+
+    const renderMain = (e = null) => {
+      let mainContent = document.getElementById('main-content')
+      if (e == null) {
+        console.log(e)
+        mainContent.innerHTML = ''
+      } else {
+        let noteId = e.target.parentElement.dataset.noteId
+        let note = notes.find(note => note.id == noteId)
+        let noteContent =
+        `<div data-note-id="${note.id}"> <h3>${note.title}</h3>
+        <p>${note.body}</p>
+        <button id="delete-note-button" type="button">Delete Note</button>
+        </div>
+        `
+        mainContent.innerHTML = noteContent
+        document.getElementById('delete-note-button').addEventListener('click', deleteNote)
+      }
     }
 
 
@@ -24,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const newNoteTitle = document.getElementById('new-note-title').value
         const newNoteBody = document.getElementById('new-note-body').value
         postNote({title: newNoteTitle, body: newNoteBody, user_id:1})
-        // console.log(`title: '${title}', body: '${body}', user_id:1`)
     })
   }
 
@@ -73,6 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(data => {
       notes = data[0].notes
     renderSidebar()
+    renderMain()
     generateListeners()
   })
 }
