@@ -9,8 +9,25 @@
   </head>
 
   <body>
-    <div id="sidebar"></div>
+    <div id="sidebar">
+      <div id="note-previews">  
+      </div>
+      <div id="form-container">
+        <form id="create-note-form" action="http://localhost:3000/api/v1/notes">
+           <label for="new-note-title">Title:</label>
+           <input type="text" id="new-note-title" name="new-note-title" placeholder="title">
+           <label for="new-note-body">Body:</label>
+           <input type="text" id="new-note-body" name="new-note-body" placeholder="body">
+           <input id="create-note-submit" type="submit" value="Create New Note">
+        </form>
+      </div>
+    </div>
     <div id="main-content" class="main">
     </div>
+
+
+
+
+
   </body>
 </html>
